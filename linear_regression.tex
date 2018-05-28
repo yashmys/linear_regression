@@ -1,0 +1,745 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={linear\_regression.R},
+            pdfauthor={Dhathri},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{linear\_regression.R}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Dhathri}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{Mon May 28 18:26:34 2018}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#  Introduction}
+\NormalTok{## ââââââââââââââ}
+
+\CommentTok{#   â¢ Learning objectives:}
+\NormalTok{##     â¢ Learn the R formula interface}
+\NormalTok{##     â¢ Specify factor contrasts to test specific hypotheses}
+\NormalTok{##     â¢ Perform model comparisons}
+\NormalTok{##     â¢ Run and interpret variety of regression models in R}
+
+\NormalTok{## Set working directory}
+\NormalTok{## âââââââââââââââââââââââââ}
+
+\NormalTok{##   It is often helpful to start your R session by setting your working}
+\NormalTok{##   directory so you don't have to type the full path names to your data}
+\NormalTok{##   and other files}
+
+\CommentTok{# set the working directory}
+\CommentTok{# setwd("~/Desktop/Rstatistics")}
+\CommentTok{# setwd("C:/Users/dataclass/Desktop/Rstatistics")}
+
+\NormalTok{##   You might also start by listing the files in your working directory}
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"C:}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{Users}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{Dhathri}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{Desktop}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{R}\CharTok{\textbackslash{}\textbackslash{}}\StringTok{linear_regression"}\NormalTok{)}
+\KeywordTok{getwd}\NormalTok{() }\CommentTok{# where am I?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "C:/Users/Dhathri/Desktop/R/linear_regression"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{list.files}\NormalTok{(}\StringTok{"dataSets"}\NormalTok{) }\CommentTok{# files in the dataSets folder}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Exam.rds"   "states.dta" "states.rds"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Load the states data}
+\NormalTok{## ââââââââââââââââââââââââ}
+
+\CommentTok{# read the states data}
+\NormalTok{states.data <-}\StringTok{ }\KeywordTok{readRDS}\NormalTok{(}\StringTok{"dataSets/states.rds"}\NormalTok{) }
+\CommentTok{#get labels}
+\NormalTok{states.info <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{attributes}\NormalTok{(states.data)[}\KeywordTok{c}\NormalTok{(}\StringTok{"names"}\NormalTok{, }\StringTok{"var.labels"}\NormalTok{)])}
+\CommentTok{#look at last few labels}
+\KeywordTok{tail}\NormalTok{(states.info, }\DecValTok{8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      names                      var.labels
+## 14    csat        Mean composite SAT score
+## 15    vsat           Mean verbal SAT score
+## 16    msat             Mean math SAT score
+## 17 percent       % HS graduates taking SAT
+## 18 expense Per pupil expenditures prim&sec
+## 19  income Median household income, $1,000
+## 20    high             % adults HS diploma
+## 21 college         % adults college degree
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Linear regression}
+\NormalTok{## âââââââââââââââââââ}
+
+\NormalTok{## Examine the data before fitting models}
+\NormalTok{## ââââââââ,ââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Start by examining the data to check for problems.}
+
+\CommentTok{# summary of expense and csat columns, all rows}
+\NormalTok{sts.ex.sat <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(states.data, }\DataTypeTok{select =} \KeywordTok{c}\NormalTok{(}\StringTok{"expense"}\NormalTok{, }\StringTok{"csat"}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(sts.ex.sat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     expense          csat       
+##  Min.   :2960   Min.   : 832.0  
+##  1st Qu.:4352   1st Qu.: 888.0  
+##  Median :5000   Median : 926.0  
+##  Mean   :5236   Mean   : 944.1  
+##  3rd Qu.:5794   3rd Qu.: 997.0  
+##  Max.   :9259   Max.   :1093.0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# correlation between expense and csat}
+\KeywordTok{cor}\NormalTok{(sts.ex.sat)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            expense       csat
+## expense  1.0000000 -0.4662978
+## csat    -0.4662978  1.0000000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Plot the data before fitting models}
+\NormalTok{## âââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Plot the data to look for multivariate outliers, non-linear}
+\NormalTok{##   relationships etc.}
+
+\CommentTok{# scatter plot of expense vs csat}
+\KeywordTok{plot}\NormalTok{(sts.ex.sat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Linear regression example}
+\NormalTok{## âââââââââââââââââââââââââââââ}
+
+\NormalTok{##   â¢ Linear regression models can be fit with the `lm()' function}
+\NormalTok{##   â¢ For example, we can use `lm' to predict SAT scores based on}
+\NormalTok{##     per-pupal expenditures:}
+
+\CommentTok{# Fit our regression model}
+\NormalTok{sat.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\NormalTok{expense, }\CommentTok{# regression formula}
+              \DataTypeTok{data=}\NormalTok{states.data) }\CommentTok{# data set}
+\CommentTok{# Summarize and print the results}
+\KeywordTok{summary}\NormalTok{(sat.mod) }\CommentTok{# show regression coefficients table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = csat ~ expense, data = states.data)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -131.811  -38.085    5.607   37.852  136.495 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  1.061e+03  3.270e+01   32.44  < 2e-16 ***
+## expense     -2.228e-02  6.037e-03   -3.69 0.000563 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 59.81 on 49 degrees of freedom
+## Multiple R-squared:  0.2174, Adjusted R-squared:  0.2015 
+## F-statistic: 13.61 on 1 and 49 DF,  p-value: 0.0005631
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Why is the association between expense and SAT scores /negative/?}
+\NormalTok{## âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Many people find it surprising that the per-capita expenditure on}
+\NormalTok{##   students is negatively related to SAT scores. The beauty of multiple}
+\NormalTok{##   regression is that we can try to pull these apart. What would the}
+\NormalTok{##   association between expense and SAT scores be if there were no}
+\NormalTok{##   difference among the states in the percentage of students taking the}
+\NormalTok{##   SAT?}
+
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\NormalTok{expense }\OperatorTok{+}\StringTok{ }\NormalTok{percent, }\DataTypeTok{data =}\NormalTok{ states.data))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = csat ~ expense + percent, data = states.data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -62.921 -24.318   1.741  15.502  75.623 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 989.807403  18.395770  53.806  < 2e-16 ***
+## expense       0.008604   0.004204   2.046   0.0462 *  
+## percent      -2.537700   0.224912 -11.283 4.21e-15 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 31.62 on 48 degrees of freedom
+## Multiple R-squared:  0.7857, Adjusted R-squared:  0.7768 
+## F-statistic: 88.01 on 2 and 48 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## The lm class and methods}
+\NormalTok{## ââââââââââââââââââââââââââââ}
+
+\NormalTok{##   OK, we fit our model. Now what?}
+\NormalTok{##   â¢ Examine the model object:}
+
+\KeywordTok{class}\NormalTok{(sat.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "lm"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(sat.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "coefficients"  "residuals"     "effects"       "rank"         
+##  [5] "fitted.values" "assign"        "qr"            "df.residual"  
+##  [9] "xlevels"       "call"          "terms"         "model"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{methods}\NormalTok{(}\DataTypeTok{class =} \KeywordTok{class}\NormalTok{(sat.mod))[}\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "add1.lm"                   "alias.lm"                 
+## [3] "anova.lm"                  "case.names.lm"            
+## [5] "coerce,oldClass,S3-method" "confint.lm"               
+## [7] "cooks.distance.lm"         "deviance.lm"              
+## [9] "dfbeta.lm"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{##   â¢ Use function methods to get more information about the fit}
+
+\KeywordTok{confint}\NormalTok{(sat.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                    2.5 %        97.5 %
+## (Intercept) 995.01753164 1126.44735626
+## expense      -0.03440768   -0.01014361
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# hist(residuals(sat.mod))}
+
+\NormalTok{## Linear Regression Assumptions}
+\NormalTok{## âââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   â¢ Ordinary least squares regression relies on several assumptions,}
+\NormalTok{##     including that the residuals are normally distributed and}
+\NormalTok{##     homoscedastic, the errors are independent and the relationships are}
+\NormalTok{##     linear.}
+
+\NormalTok{##   â¢ Investigate these assumptions visually by plotting your model:}
+
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar =} \KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{), }\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\CommentTok{#optional}
+\KeywordTok{plot}\NormalTok{(sat.mod, }\DataTypeTok{which =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\CommentTok{# "which" argument optional}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Comparing models}
+\NormalTok{## ââââââââââââââââââââ}
+
+\NormalTok{##   Do congressional voting patterns predict SAT scores over and above}
+\NormalTok{##   expense? Fit two models and compare them:}
+
+\CommentTok{# fit another model, adding house and senate as predictors}
+\NormalTok{sat.voting.mod <-}\StringTok{  }\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\NormalTok{expense }\OperatorTok{+}\StringTok{ }\NormalTok{house }\OperatorTok{+}\StringTok{ }\NormalTok{senate,}
+                      \DataTypeTok{data =} \KeywordTok{na.omit}\NormalTok{(states.data))}
+\NormalTok{sat.mod <-}\StringTok{ }\KeywordTok{update}\NormalTok{(sat.mod, }\DataTypeTok{data=}\KeywordTok{na.omit}\NormalTok{(states.data))}
+\CommentTok{# compare using the anova() function}
+\KeywordTok{anova}\NormalTok{(sat.mod, sat.voting.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Model 1: csat ~ expense
+## Model 2: csat ~ expense + house + senate
+##   Res.Df    RSS Df Sum of Sq      F  Pr(>F)  
+## 1     46 169050                              
+## 2     44 149284  2     19766 2.9128 0.06486 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{coef}\NormalTok{(}\KeywordTok{summary}\NormalTok{(sat.voting.mod))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  Estimate   Std. Error    t value     Pr(>|t|)
+## (Intercept) 1082.93438041 38.633812740 28.0307405 1.067795e-29
+## expense       -0.01870832  0.009691494 -1.9303852 6.001998e-02
+## house         -1.44243754  0.600478382 -2.4021473 2.058666e-02
+## senate         0.49817861  0.513561356  0.9700469 3.373256e-01
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Exercise: least squares regression}
+\NormalTok{## ââââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Use the /states.rds/ data set. Fit a model predicting energy consumed}
+\NormalTok{##   per capita (energy) from the percentage of residents living in}
+\NormalTok{##   metropolitan areas (metro). Be sure to}
+\NormalTok{##   1. Examine/plot the data before fitting the model}
+\NormalTok{##   2. Print and interpret the model `summary'}
+\NormalTok{##   3. `plot' the model to look for deviations from modeling assumptions}
+\NormalTok{sts.egy.pc <-}\StringTok{  }\KeywordTok{subset}\NormalTok{(states.data , }\DataTypeTok{select =} \KeywordTok{c}\NormalTok{(}\StringTok{"energy"}\NormalTok{, }\StringTok{"metro"}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(sts.egy.pc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      energy          metro       
+##  Min.   :200.0   Min.   : 20.40  
+##  1st Qu.:285.0   1st Qu.: 46.98  
+##  Median :320.0   Median : 67.55  
+##  Mean   :354.5   Mean   : 64.07  
+##  3rd Qu.:371.5   3rd Qu.: 81.58  
+##  Max.   :991.0   Max.   :100.00  
+##  NA's   :1       NA's   :1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(sts.egy.pc)}
+
+\NormalTok{egy.mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(energy }\OperatorTok{~}\StringTok{ }\NormalTok{metro , }\DataTypeTok{data =} \KeywordTok{na.omit}\NormalTok{(states.data))}
+\KeywordTok{summary}\NormalTok{(egy.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = energy ~ metro, data = na.omit(states.data))
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -179.17  -54.21  -21.64   15.07  448.02 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 449.8382    50.4472   8.917 1.37e-11 ***
+## metro        -1.6526     0.7428  -2.225    0.031 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 112.3 on 46 degrees of freedom
+## Multiple R-squared:  0.09714,    Adjusted R-squared:  0.07751 
+## F-statistic: 4.949 on 1 and 46 DF,  p-value: 0.03105
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(egy.mod)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-3.pdf}
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{##   Select one or more additional predictors to add to your model and}
+\NormalTok{##   repeat steps 1-3. Is this model significantly better than the model}
+\NormalTok{##   with /metro/ as the only predictor?anova(egy.mod,emod2)}
+\NormalTok{emod2  <-}\StringTok{  }\KeywordTok{lm}\NormalTok{(energy }\OperatorTok{~}\StringTok{ }\NormalTok{metro }\OperatorTok{+}\StringTok{  }\NormalTok{green }\OperatorTok{+}\StringTok{ }\NormalTok{toxic }\OperatorTok{+}\StringTok{ }\NormalTok{area , }\DataTypeTok{data =} \KeywordTok{na.omit}\NormalTok{(states.data) )}
+\KeywordTok{summary}\NormalTok{(emod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = energy ~ metro + green + toxic + area, data = na.omit(states.data))
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -180.56  -25.95   -1.20   22.87  163.31 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 1.474e+02  3.721e+01   3.962 0.000275 ***
+## metro       2.154e-01  4.165e-01   0.517 0.607643    
+## green       4.637e+00  5.737e-01   8.082 3.63e-10 ***
+## toxic       2.575e+00  4.636e-01   5.554 1.62e-06 ***
+## area        3.349e-04  1.824e-04   1.836 0.073262 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 57.15 on 43 degrees of freedom
+## Multiple R-squared:  0.7815, Adjusted R-squared:  0.7612 
+## F-statistic: 38.45 on 4 and 43 DF,  p-value: 1.116e-13
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(emod2)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-5.pdf}
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Interactions and factors}
+\NormalTok{## ââââââââââââââââââââââââââ}
+
+\NormalTok{## Modeling interactions}
+\NormalTok{## âââââââââââââââââââââââââ}
+
+\NormalTok{##   Interactions allow us assess the extent to which the association}
+\NormalTok{##   between one predictor and the outcome depends on a second predictor.}
+\NormalTok{##   For example: Does the association between expense and SAT scores}
+\NormalTok{##   depend on the median income in the state?}
+
+  \CommentTok{#Add the interaction to the model}
+\NormalTok{sat.expense.by.percent <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\NormalTok{expense}\OperatorTok{*}\NormalTok{income,}
+                             \DataTypeTok{data=}\NormalTok{states.data) }
+\CommentTok{#Show the results}
+  \KeywordTok{coef}\NormalTok{(}\KeywordTok{summary}\NormalTok{(sat.expense.by.percent)) }\CommentTok{# show regression coefficients table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     Estimate   Std. Error   t value     Pr(>|t|)
+## (Intercept)     1.380364e+03 1.720863e+02  8.021351 2.367069e-10
+## expense        -6.384067e-02 3.270087e-02 -1.952262 5.687837e-02
+## income         -1.049785e+01 4.991463e+00 -2.103161 4.083253e-02
+## expense:income  1.384647e-03 8.635529e-04  1.603431 1.155395e-01
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{## Regression with categorical predictors}
+\NormalTok{## ââââââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Let's try to predict SAT scores from region, a categorical variable.}
+\NormalTok{##   Note that you must make sure R does not think your categorical}
+\NormalTok{##   variable is numeric.}
+
+\CommentTok{# make sure R knows region is categorical}
+\KeywordTok{str}\NormalTok{(states.data}\OperatorTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Factor w/ 4 levels "West","N. East",..: 3 1 1 3 1 1 2 3 NA 3 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{states.data}\OperatorTok{$}\NormalTok{region <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(states.data}\OperatorTok{$}\NormalTok{region)}
+\CommentTok{#Add region to the model}
+\NormalTok{sat.region <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\NormalTok{region,}
+                 \DataTypeTok{data=}\NormalTok{states.data) }
+\CommentTok{#Show the results}
+\KeywordTok{coef}\NormalTok{(}\KeywordTok{summary}\NormalTok{(sat.region)) }\CommentTok{# show regression coefficients table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                Estimate Std. Error    t value     Pr(>|t|)
+## (Intercept)   946.30769   14.79582 63.9577807 1.352577e-46
+## regionN. East -56.75214   23.13285 -2.4533141 1.800383e-02
+## regionSouth   -16.30769   19.91948 -0.8186806 4.171898e-01
+## regionMidwest  63.77564   21.35592  2.9863209 4.514152e-03
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{anova}\NormalTok{(sat.region) }\CommentTok{# show ANOVA table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: csat
+##           Df Sum Sq Mean Sq F value    Pr(>F)    
+## region     3  82049 27349.8  9.6102 4.859e-05 ***
+## Residuals 46 130912  2845.9                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{##   Again, *make sure to tell R which variables are categorical by}
+\NormalTok{##   converting them to factors!*}
+
+\NormalTok{## Setting factor reference groups and contrasts}
+\NormalTok{## âââââââââââââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   In the previous example we use the default contrasts for region. The}
+\NormalTok{##   default in R is treatment contrasts, with the first level as the}
+\NormalTok{##   reference. We can change the reference group or use another coding}
+\NormalTok{##   scheme using the `C' function.}
+
+\CommentTok{# print default contrasts}
+\KeywordTok{contrasts}\NormalTok{(states.data}\OperatorTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         N. East South Midwest
+## West          0     0       0
+## N. East       1     0       0
+## South         0     1       0
+## Midwest       0     0       1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# change the reference group}
+\KeywordTok{coef}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\KeywordTok{C}\NormalTok{(region, }\DataTypeTok{base=}\DecValTok{4}\NormalTok{),}
+                \DataTypeTok{data=}\NormalTok{states.data)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                        Estimate Std. Error   t value     Pr(>|t|)
+## (Intercept)          1010.08333   15.39998 65.589930 4.296307e-47
+## C(region, base = 4)1  -63.77564   21.35592 -2.986321 4.514152e-03
+## C(region, base = 4)2 -120.52778   23.52385 -5.123641 5.798399e-06
+## C(region, base = 4)3  -80.08333   20.37225 -3.931000 2.826007e-04
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# change the coding scheme}
+\KeywordTok{coef}\NormalTok{(}\KeywordTok{summary}\NormalTok{(}\KeywordTok{lm}\NormalTok{(csat }\OperatorTok{~}\StringTok{ }\KeywordTok{C}\NormalTok{(region, contr.helmert),}
+                \DataTypeTok{data=}\NormalTok{states.data)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             Estimate Std. Error     t value     Pr(>|t|)
+## (Intercept)               943.986645   7.706155 122.4977451 1.689670e-59
+## C(region, contr.helmert)1 -28.376068  11.566423  -2.4533141 1.800383e-02
+## C(region, contr.helmert)2   4.022792   5.884552   0.6836191 4.976450e-01
+## C(region, contr.helmert)3  22.032229   4.446777   4.9546509 1.023364e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{##   See also `?contrasts', `?contr.treatment', and `?relevel'.}
+
+\NormalTok{## Exercise: interactions and factors}
+\NormalTok{## ââââââââââââââââââââââââââââââââââââââââ}
+
+\NormalTok{##   Use the states data set.}
+
+\NormalTok{##   1. Add on to the regression equation that you created in exercise 1 by}
+\NormalTok{##      generating an interaction term and testing the interaction.}
+
+\NormalTok{##  generate the interaction between metro and area }
+\NormalTok{## there is no  improvement }
+\NormalTok{emod3  <-}\StringTok{  }\KeywordTok{lm}\NormalTok{(energy }\OperatorTok{~}\StringTok{ }\NormalTok{metro }\OperatorTok{*}\StringTok{ }\NormalTok{area }\OperatorTok{+}\StringTok{  }\NormalTok{green }\OperatorTok{+}\StringTok{ }\NormalTok{toxic , }\DataTypeTok{data =} \KeywordTok{na.omit}\NormalTok{(states.data)  )}
+
+\NormalTok{##   2. Try adding region to the model. Are there significant differences}
+\NormalTok{##      across the four regions?}
+
+\KeywordTok{str}\NormalTok{(states.data}\OperatorTok{$}\NormalTok{region)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Factor w/ 4 levels "West","N. East",..: 3 1 1 3 1 1 2 3 NA 3 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{states.data}\OperatorTok{$}\NormalTok{region  <-}\StringTok{  }\KeywordTok{factor}\NormalTok{(states.data}\OperatorTok{$}\NormalTok{region)}
+\NormalTok{emod4   <-}\StringTok{  }\KeywordTok{lm}\NormalTok{(energy }\OperatorTok{~}\StringTok{ }\NormalTok{metro  }\OperatorTok{+}\StringTok{  }\NormalTok{green }\OperatorTok{+}\StringTok{ }\NormalTok{toxic }\OperatorTok{+}\StringTok{ }\NormalTok{region , }\DataTypeTok{data =} \KeywordTok{na.omit}\NormalTok{(states.data) )}
+\KeywordTok{plot}\NormalTok{(emod4)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-7.pdf}
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-8.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{##  there is no impact of adding the region }
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{linear_regression_files/figure-latex/unnamed-chunk-1-9.pdf}
+
+
+\end{document}
