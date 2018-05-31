@@ -148,6 +148,23 @@ emod2  <-  lm(energy ~ metro +  green + toxic + area , data = na.omit(states.dat
 summary(emod2)
 plot(emod2)
 
+##$$$$$  the above model has R2 = 0.74 . In order to improve the accuracy, 3 outlier observations have been removed 
+##$$$$$  the accurary increased to 0.84 
+td1 <-  subset(td , select = c("energy","metro","green","toxic","area"))
+td2 <- na.omit(td1)
+td22 <-  td2[ -c (16,41,42) , ]
+id3   <-  lm(energy ~ metro * area +  green + toxic , data = td22  )
+summary(id3)
+plot(id3)
+
+
+###$$$$ from the charts , the relation is a bit non linear. So used sqrt transformation on the response variable 
+#### $$$ but the accuracy decreased from 0.84 to 0.79 
+id4   <-  lm(sqrt(energy) ~ metro * area +  green + toxic , data = td22  )
+summary(id4)
+plot(id4)
+
+
 
 ## Interactions and factors
 ## ══════════════════════════
